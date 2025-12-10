@@ -6,22 +6,29 @@ from model.schema import EmailJSON
 
 class GenaiClient:
     def __init__(self):
-        self.API_KEY = os.getenv("GENAI_KEY_API")
+        self.API_KEY = os.getenv("GENAI_API_KEY")
+        if not self.API_KEY: raise ValueError("No se encontro la api key")
+        self.client = genai.Client(api_key=self.API_KEY)
 
-    def generate_email(self, data:EmailJSON):
-        client = genai.Client(api_key=self.API_KEY)
-        response = client.models.generate_content(
-            model="gemini-2.5-flash",
-            config=types.GenerateContentConfig(
-                system_instruction=f'''
-                You are a creator of promotional email content for 
-                a product or service, 
-                using a maximum of 120 words in spanish.'''
-            ),
-            contents="",
-        )
-        print(response.text)
-
-if __name__ == '__main__':
-    g = GenaiClient()
-    g.generate_email()
+    async def generate_body_email(self, data:EmailJSON):
+        try:
+            response = self.client.models.generate_content(
+                model="gemini-2.5-flash",
+                config=types.GenerateContentConfig(
+                    system_instruction=f'''
+                    You are a creator of promotional email content for 
+                    a product or service, 
+                    using a maximum of 160 words in spanish no matter.'''
+                ),
+                
+                contents=f"""
+                Write a concise, persuasive promotional email body using this product info:
+                Type: {data.product.type}, Name: {data.product.name_product}, 
+                Description: {data.product.description}, Price: {data.product.price},
+                Highlight benefits.""",
+            )
+            print("✅ La respuesta se genero exitosamente.")
+            return response.text
+        
+        except:
+            print("❌ Hubo un error generado la respuesta.") 
