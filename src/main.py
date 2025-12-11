@@ -15,24 +15,16 @@ async def create_email_auto(data:EmailJSON):
         await email.email_server(data, True)
         return f'Se envio el correo existosamente.'
     
-    except:
-        raise ValueError('❌ Hubo un error realizando la peticion')
+    except Exception as e:
+        print(f'❌ Hubo un error realizando la peticion: {e}')
 
-@app.post('/email/create-body')
+@app.post('/email/send-emails')
 async def create_email(data:EmailJSON):
     try:
         print("✅ Se comenzo con el envio de emails.")
         await email.email_server(data, False)
     
-    except:
-        raise ValueError('❌ Hubo un error realizando la peticion')
+    except Exception as e:
+        print(f'❌ Hubo un error realizando la peticion: {e}')
 
-@app.post('/email/create-template')
-async def create_email_and_template(data:EmailJSON):
-    try:
-        print("✅ Se comenzo con la creacion y envio de emails con IA.")
-        await email.email_server(data, False, True)
-        return f'Se envio el correo existosamente.'
-    
-    except:
-        raise ValueError('❌ Hubo un error realizando la peticion')
+

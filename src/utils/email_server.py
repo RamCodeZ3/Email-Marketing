@@ -18,14 +18,14 @@ class EmailServer:
             self, 
             data: EmailJSON, 
             auto: bool, 
-            auto_template: None
     ):
         emails = data.receiver_list
         body_email = data.product.description
 
         if auto: 
-            body_email = await self.genai.generate_body_email(data)
-
+            body_email = self.genai.generate_body_email(data)
+        
+        # HTML of email
         body = f"""
         <html>
         <body style="margin:0; padding:0; font-family: Arial, sans-serif; background-color:#f4f4f4; height:100%;min-height:100vh;">
@@ -48,9 +48,9 @@ class EmailServer:
             >
 
             <div style="text-aling: left;">
-                <p style="font-size: 16px; color: #555555; line-height: 1.5; margin-bottom: 25px;">
+                <span style="font-size: 16px; color: #555555; line-height: 1.5; margin-bottom: 25px;">
                     {body_email}
-                </p>
+                </span>
             </div>
             <a 
                 href="{data.product.link_product}"
@@ -74,8 +74,6 @@ class EmailServer:
         </body>
         </html>
          """
-        if auto_template:
-           body = await self.genai.generate_template_email(data)
 
         try:
             # estructure of email
@@ -89,11 +87,10 @@ class EmailServer:
                 msg.attach(MIMEText(body, "html"))
 
                 # send email
-                server = smtplib.SMTP(self.SMTP_SERVER, self.SMTP_PORT)
-                server.starttls()
-                server.login(self.EMAIL_FROM, self.EMAIL_PASSWORD)
-                server.sendmail(self.EMAIL_FROM, email, msg.as_string())
-                server.quit()
+                with smtplib.SMTP(self.SMTP_SERVER, self.SMTP_PORT) as server:
+                    server.starttls()
+                    server.login(self.EMAIL_FROM, self.EMAIL_PASSWORD)
+                    server.sendmail(self.EMAIL_FROM, email, msg.as_string())
             
             print("✅ Correos enviado exitosamente a los siguientes emails:")
             for email in data.receiver_list:

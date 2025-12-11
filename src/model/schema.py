@@ -22,4 +22,5 @@ class EmailJSON(BaseModel):
     email_from: EmailFrom
     receiver_list: List[str]
     product: Product
+    status: Literal['sent', 'pendient']
     date_send: date
