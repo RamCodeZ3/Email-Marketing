@@ -8,8 +8,31 @@ load_dotenv()
 app = FastAPI()
 email = EmailServer()
 
-@app.post('/create-email')
-async def post_email(data:EmailJSON):
-    print("✅ Se comenzo con la creacion y envio de emails.")
-    await email.email_server(data)
-    return f'Se envio el correo existosamente.'
+@app.post('/email/create-body-auto')
+async def create_email_auto(data:EmailJSON):
+    try:
+        print("✅ Se comenzo con la creacion y envio de emails con IA.")
+        await email.email_server(data, True)
+        return f'Se envio el correo existosamente.'
+    
+    except:
+        raise ValueError('❌ Hubo un error realizando la peticion')
+
+@app.post('/email/create-body')
+async def create_email(data:EmailJSON):
+    try:
+        print("✅ Se comenzo con el envio de emails.")
+        await email.email_server(data, False)
+    
+    except:
+        raise ValueError('❌ Hubo un error realizando la peticion')
+
+@app.post('/email/create-template')
+async def create_email_and_template(data:EmailJSON):
+    try:
+        print("✅ Se comenzo con la creacion y envio de emails con IA.")
+        await email.email_server(data, False, True)
+        return f'Se envio el correo existosamente.'
+    
+    except:
+        raise ValueError('❌ Hubo un error realizando la peticion')

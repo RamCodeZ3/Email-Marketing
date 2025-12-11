@@ -14,8 +14,17 @@ class EmailServer:
         self.EMAIL_PASSWORD = os.getenv("SMTP_EMAIL_PASSWORD")
         self.genai = GenaiClient()
 
-    async def email_server(self, data: EmailJSON):
+    async def email_server(
+            self, 
+            data: EmailJSON, 
+            auto: bool, 
+            auto_template: None
+    ):
         emails = data.receiver_list
+        body_email = data.product.description
+
+        if auto: 
+            body_email = await self.genai.generate_body_email(data)
 
         body = f"""
         <html>
@@ -38,9 +47,11 @@ class EmailServer:
                 style="border-radius: 8px; margin-bottom: 20px;"
             >
 
-            <p style="font-size: 16px; color: #555555; line-height: 1.5; margin-bottom: 25px; text-aling: left;">
-                {await self.genai.generate_body_email(data)}
-            </p>
+            <div style="text-aling: left;">
+                <p style="font-size: 16px; color: #555555; line-height: 1.5; margin-bottom: 25px;">
+                    {body_email}
+                </p>
+            </div>
             <a 
                 href="{data.product.link_product}"
                 style="
@@ -63,6 +74,8 @@ class EmailServer:
         </body>
         </html>
          """
+        if auto_template:
+           body = await self.genai.generate_template_email(data)
 
         try:
             # estructure of email
