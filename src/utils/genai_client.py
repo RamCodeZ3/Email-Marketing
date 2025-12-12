@@ -1,7 +1,7 @@
 from google import genai
 from google.genai import types
 import os
-from model.schema import EmailJSON
+from model.schemas import EmailJSON
 
 
 class GenaiClient:

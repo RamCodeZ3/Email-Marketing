@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from model.schema import EmailJSON
+from model.schemas import EmailJSON
 from utils.email_server import EmailServer
 from dotenv import load_dotenv
 
