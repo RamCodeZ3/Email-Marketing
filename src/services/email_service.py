@@ -1,6 +1,5 @@
 from setting.supabase_client import supabase
-from model import EmailJSON
-import asyncio
+from model.schemas import EmailJSON
 
 
 async def get_all_emails():
