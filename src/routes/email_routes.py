@@ -1,0 +1,69 @@
+from fastapi import APIRouter
+from model.schemas import EmailModel
+from utils.email_server import EmailServer as email
+from services import email_service as es
+
+
+routes = APIRouter(
+    prefix="/email",
+    tags=["Email"]
+)
+
+@routes.get('/get-all')
+async def get_all_emails():
+    try:
+        return await es.get_all_emails()
+    
+    except Exception as e:
+        print(f'❌ Hubo un error realizando la peticion: {e}')
+
+
+@routes.get('/get/{email_id}')
+async def get_email_by_id(email_id: int):
+    try:
+        return await es.get_email_by_id(email_id)
+    
+    except Exception as e:
+        print(f'❌ Hubo un error realizando la peticion: {e}')
+
+
+# Send Email
+@routes.post('/create-body-auto')
+async def create_email_auto(data:EmailModel):
+    try:
+        print("✅ Se comenzo con la creacion y envio de emails con IA.")
+        await email.email_server(data, True)
+        return f'Se envio el correo existosamente.'
+    
+    except Exception as e:
+        print(f'❌ Hubo un error realizando la peticion: {e}')
+
+
+@routes.post('/send-emails')
+async def create_email(data:EmailModel):
+    try:
+        await es.create_email(data)
+        await email.email_server(data, False)
+    
+    except Exception as e:
+        print(f'❌ Hubo un error realizando la peticion: {e}')
+
+
+@routes.put('/update/{email_id}')
+async def update_email(email_id: int):
+    try:
+        await es.update_email_by_id(email_id)
+        return "Se actualizo el email con éxito"
+    
+    except Exception as e:
+        print(f'❌ Hubo un error realizando la peticion: {e}')
+
+
+@routes.delete('/delete/{email_id}')
+async def delete_email(email_id: int):
+    try:
+        await es.delete_email_by_id(email_id)
+        return "Se Elimino el email con éxito"
+    
+    except Exception as e:
+        print(f'❌ Hubo un error realizando la peticion: {e}')

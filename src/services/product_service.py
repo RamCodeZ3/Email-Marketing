@@ -1,5 +1,5 @@
-from setting.supabase_client import supabase
-from model.schemas import Product
+from services.setting.supabase_client import supabase
+from model.schemas import ProductModel
 from typing import Literal
 
 
@@ -52,7 +52,7 @@ async def get_product_by_type(product_type: Literal["product", "service"]):
         return f"Hubo un error recibiendo los datos: {e}"
 
 
-async def create_product(data: Product):
+async def create_product(data: ProductModel):
     try:
         response = (
             supabase.table("products")
@@ -68,7 +68,7 @@ async def create_product(data: Product):
         return f"Hubo un error añadiendo el nuevo producto: {e}"
 
 
-async def update_product_by_id(product_type: int, data: Product):
+async def update_product_by_id(product_type: int, data: ProductModel):
     try:
         response = (
             supabase.table("products")

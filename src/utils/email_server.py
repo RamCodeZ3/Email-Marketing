@@ -2,7 +2,7 @@ import smtplib
 import os
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from model.schemas import EmailMode
+from model.schemas import EmailModel
 from utils.genai_client import GenaiClient
 
 
@@ -16,14 +16,14 @@ class EmailServer:
 
     async def email_server(
             self, 
-            data: EmailMode, 
+            data: EmailModel, 
             auto: bool, 
     ):
         emails = data.receiver_list
         body_email = data.product.description
 
         if auto: 
-            body_email = self.genai.generate_body_email(data)
+            body_email = await self.genai.generate_body_email(data)
         
         # HTML of email
         body = f"""

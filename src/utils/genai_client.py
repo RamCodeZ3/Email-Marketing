@@ -1,7 +1,8 @@
 from google import genai
 from google.genai import types
 import os
-from model.schemas import EmailMode
+from model.schemas import EmailModel
+from services import email_service as es
 
 
 class GenaiClient:
@@ -10,7 +11,7 @@ class GenaiClient:
         if not self.API_KEY: raise ValueError("No se encontro la api key")
         self.client = genai.Client(api_key=self.API_KEY)
 
-    def generate_body_email(self, data:EmailMode):
+    async def generate_body_email(self, data:EmailModel):
         try:
             response = self.client.models.generate_content(
                 model="gemini-2.5-flash",
@@ -27,7 +28,13 @@ class GenaiClient:
                 Description: {data.product.description}, Price: {data.product.price},
                 Highlight benefits.""",
             )
+            
+            email_to_save = data.model_copy(update={
+                "body": response.text
+            })
+
             print("✅ La respuesta se genero exitosamente.")
+            await es.create_email(email_to_save)
             return response.text
 
         except:

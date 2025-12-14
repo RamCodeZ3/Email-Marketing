@@ -6,6 +6,7 @@ from datetime import date
 class EmailModel(BaseModel):
     name_company: Optional[str] = None
     title: str
+    body: Optional[str] = None
     receiver_list: List[str]
     product_id: int
     status: Literal['sent', 'pendient']

@@ -1,5 +1,5 @@
-from setting.supabase_client import supabase
-from model.schemas import EmailMode
+from services.setting.supabase_client import supabase
+from model.schemas import EmailModel
 
 
 async def get_all_emails():
@@ -34,7 +34,7 @@ async def get_email_by_id(email_id: int):
         return f"Hubo un error recibiendo los datos: {e}"
 
 
-async def create_email(data: EmailMode):
+async def create_email(data: EmailModel):
     try:
         response = (
             supabase.table("emails")
@@ -50,7 +50,7 @@ async def create_email(data: EmailMode):
         return f"Hubo un error añadiendo el nuevo email: {e}"
 
 
-async def update_email_by_id(email_id: int, data: EmailMode):
+async def update_email_by_id(email_id: int, data: EmailModel):
     try:
         response = (
             supabase.table("emails")

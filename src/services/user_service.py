@@ -1,4 +1,4 @@
-from setting.supabase_client import supabase
+from services.setting.supabase_client import supabase
 from model.schemas import UserModel
 
 
