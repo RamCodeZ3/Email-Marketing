@@ -2,7 +2,7 @@ import smtplib
 import os
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from model.schemas import EmailJSON
+from model.schemas import EmailMode
 from utils.genai_client import GenaiClient
 
 
@@ -16,7 +16,7 @@ class EmailServer:
 
     async def email_server(
             self, 
-            data: EmailJSON, 
+            data: EmailMode, 
             auto: bool, 
     ):
         emails = data.receiver_list

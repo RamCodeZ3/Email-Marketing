@@ -1,7 +1,7 @@
 from google import genai
 from google.genai import types
 import os
-from model.schemas import EmailJSON
+from model.schemas import EmailMode
 
 
 class GenaiClient:
@@ -10,7 +10,7 @@ class GenaiClient:
         if not self.API_KEY: raise ValueError("No se encontro la api key")
         self.client = genai.Client(api_key=self.API_KEY)
 
-    def generate_body_email(self, data:EmailJSON):
+    def generate_body_email(self, data:EmailMode):
         try:
             response = self.client.models.generate_content(
                 model="gemini-2.5-flash",
