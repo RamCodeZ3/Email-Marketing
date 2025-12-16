@@ -9,6 +9,7 @@ routes = APIRouter(
     tags=["Email"]
 )
 
+
 @routes.get('/get-all')
 async def get_all_emails():
     try:
