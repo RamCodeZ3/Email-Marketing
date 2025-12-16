@@ -7,14 +7,13 @@ class EmailModel(BaseModel):
     name_company: Optional[str] = None
     title: str
     body: Optional[str] = None
-    receiver_list: List[str]
     product_id: int
     status: Literal['sent', 'pendient']
     date_send: date
 
 
 class ProductModel(BaseModel):
-    name_product: str
+    name: str
     type: Literal['product', 'service']
     description: str
     link_product: str

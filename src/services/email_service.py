@@ -36,9 +36,10 @@ async def get_email_by_id(email_id: int):
 
 async def create_email(data: EmailModel):
     try:
+        email_dict = data.model_dump(mode="json")
         response = (
             supabase.table("emails")
-                .insert(data.model_dump())
+                .insert(email_dict)
                 .execute()
         )
 
@@ -46,7 +47,7 @@ async def create_email(data: EmailModel):
         return "Se añadió el nuevo email con éxito a la base de datos."
     
     except Exception as e:
-        print("❌ Hubo un error añadiendo el nuevo email")
+        print(f"❌ Hubo un error añadiendo el nuevo email: {e}")
         return f"Hubo un error añadiendo el nuevo email: {e}"
 
 

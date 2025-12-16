@@ -18,20 +18,20 @@ async def get_all_products():
         return f"Hubo un error recibiendo los datos: {e}"
 
 
-async def get_product_by_id(product_type: int):
+async def get_product_by_id(product_id: int):
     try:
         response = (
             supabase.table("products")
                 .select("*")
-                .eq('id', product_type)
+                .eq('id', product_id)
                 .execute()
         )
 
-        print(f"✅ Se consiguió el producto con id {product_type} con éxito")
+        print(f"✅ Se consiguió el producto ID [#{product_id}] con éxito")
         return response.data
     
     except Exception as e:
-        print(f"❌ Hubo un error consiguiendo el producto con id {product_type}")
+        print(f"❌ Hubo un error consiguiendo el producto ID [#{product_id}]")
         return f"Hubo un error recibiendo los datos: {e}"
 
 
@@ -68,35 +68,35 @@ async def create_product(data: ProductModel):
         return f"Hubo un error añadiendo el nuevo producto: {e}"
 
 
-async def update_product_by_id(product_type: int, data: ProductModel):
+async def update_product_by_id(product_id: int, data: ProductModel):
     try:
         response = (
             supabase.table("products")
                 .update(data.model_dump())
-                .eq('id', product_type)
+                .eq('id', product_id)
                 .execute()
         )
 
-        print(f"✅ Se actualizó el producto con id {product_type} con éxito")
+        print(f"✅ Se actualizó el producto ID [#{product_id}] con éxito")
         return "Se actualizó el producto con éxito."
     
     except Exception as e:
-        print(f"❌ Hubo un error actualizando el producto con id {product_type}")
+        print(f"❌ Hubo un error actualizando el producto ID [#{product_id}]")
         return f"Hubo un error actualizando el producto: {e}"
 
 
-async def delete_product_by_id(product_type: int):
+async def delete_product_by_id(product_id: int):
     try:
         response = (
             supabase.table("products")
                 .delete()
-                .eq('id', product_type)
+                .eq('id', product_id)
                 .execute()
         )
 
-        print(f"✅ Se eliminó el producto con id {product_type} con éxito")
+        print(f"✅ Se eliminó el producto ID [#{product_id}] con éxito")
         return "Se eliminó el producto con éxito."
     
     except Exception as e:
-        print(f"❌ Hubo un error eliminando el producto con id {product_type}")
+        print(f"❌ Hubo un error eliminando el producto ID [#{product_id}]")
         return f"Hubo un error eliminando el producto: {e}"

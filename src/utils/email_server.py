@@ -4,6 +4,8 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from model.schemas import EmailModel
 from utils.genai_client import GenaiClient
+from services.user_service import get_all_users
+from services.product_service import get_product_by_id
 
 
 class EmailServer:
@@ -19,11 +21,13 @@ class EmailServer:
             data: EmailModel, 
             auto: bool, 
     ):
-        emails = data.receiver_list
-        body_email = data.product.description
+        emails = await get_all_users()
+        product = (await get_product_by_id(data.product_id))[0]
+
+        body_email = data.body
 
         if auto: 
-            body_email = await self.genai.generate_body_email(data)
+            body_email = await self.genai.generate_body_email(data, product)
         
         # HTML of email
         body = f"""
@@ -38,10 +42,10 @@ class EmailServer:
                 border: 1px solid #e5e5e5;
             ">
             <h1 style="font-size: 24px; color: #333333; margin-bottom: 20px; text-aling: left;">
-                {data.product.title}
+                {data.title}
             </h1>
             <img 
-                src="{data.product.url_img_product}" 
+                src="{product["url_img_product"]}" 
                 alt="Imagen del producto" 
                 width="95%" 
                 style="border-radius: 8px; margin-bottom: 20px;"
@@ -53,7 +57,7 @@ class EmailServer:
                 </span>
             </div>
             <a 
-                href="{data.product.link_product}"
+                href="{product["link_product"]}"
                 style="
                 display: inline-block;
                 background-color: #007bff;
@@ -68,7 +72,7 @@ class EmailServer:
             </a>
 
             <p style="margin-top: 30px; font-size: 12px; color:#999999;">
-                © {data.email_from.name_company if data.email_from.name_company else "Nuestra Empresa"}
+                © {data.name_company if data.name_company else "Nuestra Empresa"}
             </p>
             </div>
         </body>
@@ -81,8 +85,8 @@ class EmailServer:
                 
                 msg = MIMEMultipart()
                 msg['From'] = self.EMAIL_FROM
-                msg['To'] = email
-                msg["Subject"] = data.product.title
+                msg['To'] = email["email"]
+                msg["Subject"] = data.title
                 
                 msg.attach(MIMEText(body, "html"))
 
@@ -90,11 +94,9 @@ class EmailServer:
                 with smtplib.SMTP(self.SMTP_SERVER, self.SMTP_PORT) as server:
                     server.starttls()
                     server.login(self.EMAIL_FROM, self.EMAIL_PASSWORD)
-                    server.sendmail(self.EMAIL_FROM, email, msg.as_string())
+                    server.sendmail(self.EMAIL_FROM, email["email"], msg.as_string())
             
-            print("✅ Correos enviado exitosamente a los siguientes emails:")
-            for email in data.receiver_list:
-                print("-- {}".format(email))
+            print("✅ Correos enviado exitosamente a todos los usuarios")
         
         except Exception as e:
             print("❌ Error enviando el correo:", e)
