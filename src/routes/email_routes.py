@@ -52,9 +52,9 @@ async def create_email(data:EmailModel):
 
 
 @routes.put('/update/{email_id}')
-async def update_email(email_id: int):
+async def update_email(email_id: int, data:EmailModel):
     try:
-        await es.update_email_by_id(email_id)
+        await es.update_email_by_id(email_id, data)
         return "Se actualizo el email con éxito"
     
     except Exception as e:

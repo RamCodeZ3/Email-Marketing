@@ -19,7 +19,8 @@ class EmailServer:
     async def email_server(
             self, 
             data: EmailModel, 
-            auto: bool, 
+            auto: bool,
+            storage: True
     ):
         emails = await get_all_users()
         product = (await get_product_by_id(data.product_id))[0]
@@ -27,7 +28,7 @@ class EmailServer:
         body_email = data.body
 
         if auto: 
-            body_email = await self.genai.generate_body_email(data, product)
+            body_email = await self.genai.generate_body_email(data, product, storage)
         
         # HTML of email
         body = f"""
@@ -88,7 +89,7 @@ class EmailServer:
                 msg['To'] = email["email"]
                 msg["Subject"] = data.title
                 
-                msg.attach(MIMEText(body, "html"))
+                msg.attach(MIMEText(body.replace("user", email["name"]), "html"))
 
                 # send email
                 with smtplib.SMTP(self.SMTP_SERVER, self.SMTP_PORT) as server:

@@ -37,9 +37,9 @@ async def create_product(data: ProductModel):
 
 
 @routes.put('/update/{product_id}')
-async def update_product(product_id: int):
+async def update_product(product_id: int, data:ProductModel):
     try:
-        await ps.update_product_by_id(product_id)
+        await ps.update_product_by_id(product_id, data)
         return "Se actualizo el producto con éxito"
     
     except Exception as e:

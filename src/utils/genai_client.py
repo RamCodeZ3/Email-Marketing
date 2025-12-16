@@ -3,7 +3,6 @@ from google.genai import types
 import os
 from model.schemas import EmailModel, ProductModel
 from services import email_service as es
-from services.product_service import get_product_by_id
 
 
 class GenaiClient:
@@ -12,7 +11,12 @@ class GenaiClient:
         if not self.API_KEY: raise ValueError("No se encontro la api key")
         self.client = genai.Client(api_key=self.API_KEY)
 
-    async def generate_body_email(self, data:EmailModel, product:ProductModel):
+    async def generate_body_email(
+            self,
+            data:EmailModel,
+            product:ProductModel,
+            storage:bool
+        ):
         try:
             if isinstance(product, dict):
                 product = ProductModel(**product)
@@ -27,7 +31,8 @@ class GenaiClient:
                 ),
                 
                 contents=f"""
-                Write a concise, persuasive promotional email body using this product info:
+                Write a concise, persuasive promotional email body using this 
+                product info, always greet the "user" no changes always "user":
                 Type: {product.type}, Name: {product.name}, 
                 Description: {product.description}, Price: {product.price},
                 Highlight benefits.""",
@@ -38,7 +43,7 @@ class GenaiClient:
             })
 
             print("✅ La respuesta se genero exitosamente.")
-            await es.create_email(email_to_save)
+            if storage: await es.create_email(email_to_save)
             return response.text
 
         except Exception as e:

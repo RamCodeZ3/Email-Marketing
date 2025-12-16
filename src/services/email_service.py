@@ -1,5 +1,6 @@
 from services.setting.supabase_client import supabase
 from model.schemas import EmailModel
+from datetime import date
 
 
 async def get_all_emails():
@@ -83,3 +84,36 @@ async def delete_email_by_id(email_id: int):
     except Exception as e:
         print(f"❌ Hubo un error eliminando el email con id {email_id}")
         return f"Hubo un error eliminando el email: {e}"
+
+
+async def get_pending_emails_for_today():
+    try:
+        today = date.today().isoformat()
+
+        response = (
+            supabase
+            .table("emails")
+            .select("*")
+            .eq("status", "pendient")
+            .eq("date_send", today)
+            .execute()
+        )
+        return response.data or []
+    
+    except Exception as e:
+        print(f"❌ Hubo un error obteniendo los emails:{e}")
+
+async def mark_email_as_sent(email_id: int):
+    try:
+        response = (
+            supabase
+            .table("emails")
+            .update({"status": "sent"})
+            .eq("id", email_id)
+            .execute()
+        )
+
+        return response.data
+
+    except Exception as e:
+        print(f"❌ Hubo un error actualizado los emails: {e}")    
