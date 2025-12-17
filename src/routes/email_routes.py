@@ -34,7 +34,7 @@ async def get_email_by_id(email_id: int):
 async def create_email_auto(data:EmailModel):
     try:
         print("✅ Se comenzo con la creacion y envio de emails con IA.")
-        await email_server.email_server(data, True)
+        await email_server.email_server(data, True, True)
         return f'Se envio el correo existosamente.'
     
     except Exception as e:
@@ -45,7 +45,7 @@ async def create_email_auto(data:EmailModel):
 async def create_email(data:EmailModel):
     try:
         await es.create_email(data)
-        await email_server.email_server(data, False)
+        await email_server.email_server(data, False, True)
     
     except Exception as e:
         print(f'❌ Hubo un error realizando la peticion: {e}')
