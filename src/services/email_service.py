@@ -38,14 +38,22 @@ async def get_email_by_id(email_id: int):
 async def create_email(data: EmailModel):
     try:
         email_dict = data.model_dump(mode="json")
+        # remove keys with None so DB defaults are preserved
+        filtered = {k: v for k, v in email_dict.items() if v is not None}
+
+        # If no status provided, default to 'pendient' so scheduler can pick it up
+        if 'status' not in filtered:
+            filtered['status'] = 'pendient'
+
         response = (
             supabase.table("emails")
-                .insert(email_dict)
+                .insert(filtered)
                 .execute()
         )
 
         print("✅ Se añadió el nuevo email con éxito a la base de datos")
-        return "Se añadió el nuevo email con éxito a la base de datos."
+        # return the inserted record (supabase returns it in response.data)
+        return response.data[0] if response.data else response.data
     
     except Exception as e:
         print(f"❌ Hubo un error añadiendo el nuevo email: {e}")
@@ -54,9 +62,13 @@ async def create_email(data: EmailModel):
 
 async def update_email_by_id(email_id: int, data: EmailModel):
     try:
+        update_dict = data.model_dump(mode="json")
+        # avoid overwriting fields with None
+        filtered = {k: v for k, v in update_dict.items() if v is not None}
+
         response = (
             supabase.table("emails")
-                .update(data)
+                .update(filtered)
                 .eq('id', email_id)
                 .execute()
         )

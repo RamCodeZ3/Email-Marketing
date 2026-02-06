@@ -44,8 +44,19 @@ async def create_email_auto(data:EmailModel):
 @routes.post('/send-emails')
 async def create_email(data:EmailModel):
     try:
-        await es.create_email(data)
+        created = await es.create_email(data)
+        # send email to users
         await email_server.email_server(data, False, True)
+
+        # if we have the inserted id, mark it as sent
+        try:
+            if created and isinstance(created, dict) and created.get('id'):
+                await es.mark_email_as_sent(created['id'])
+                return "Correo enviado y estado actualizado a 'sent'."
+        except Exception:
+            pass
+
+        return 'Se intento enviar el correo.'
     
     except Exception as e:
         print(f'❌ Hubo un error realizando la peticion: {e}')

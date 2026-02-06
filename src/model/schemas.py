@@ -8,8 +8,8 @@ class EmailModel(BaseModel):
     title: str
     body: Optional[str] = None
     product_id: int
-    status: Literal['sent', 'pendient']
-    date_send: date
+    status: Optional[Literal['sent', 'pendient']] = None
+    date_send: Optional[date] = None
 
 
 class ProductModel(BaseModel):
