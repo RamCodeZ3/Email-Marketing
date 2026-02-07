@@ -10,17 +10,3 @@ class EmailModel(BaseModel):
     product_id: int
     status: Optional[Literal['sent', 'pendient']] = None
     date_send: Optional[date] = None
-
-
-class ProductModel(BaseModel):
-    name: str
-    type: Literal['product', 'service']
-    description: str
-    link_product: str
-    price: int
-    url_img_product: str
-
-
-class UserModel(BaseModel):
-    name: str
-    email: str

@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from model.schemas import ProductModel
+from models.product_model import ProductModel
 from services import product_service as ps
 
 

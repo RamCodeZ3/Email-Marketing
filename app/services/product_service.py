@@ -1,5 +1,5 @@
-from services.setting.supabase_client import supabase
-from model.schemas import ProductModel
+from config.supabase_client import supabase
+from models.product_model import ProductModel
 from typing import Literal
 
 

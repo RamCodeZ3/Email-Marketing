@@ -1,7 +1,8 @@
 from google import genai
 from google.genai import types
 import os
-from model.schemas import EmailModel, ProductModel
+from models.email_model import EmailModel
+from models.product_model import ProductModel
 from services import email_service as es
 
 

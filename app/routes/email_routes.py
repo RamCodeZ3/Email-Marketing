@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from model.schemas import EmailModel
+from models.email_model import EmailModel
 from utils.email_server import EmailServer
 from services import email_service as es
 

@@ -2,7 +2,7 @@ import smtplib
 import os
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from model.schemas import EmailModel
+from models.email_model import EmailModel
 from utils.genai_client import GenaiClient
 from services.user_service import get_all_users
 from services.product_service import get_product_by_id

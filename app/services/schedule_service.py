@@ -1,4 +1,4 @@
-from model.schemas import EmailModel
+from models.email_model import EmailModel
 from services.email_service import (
     get_pending_emails_for_today,
     mark_email_as_sent

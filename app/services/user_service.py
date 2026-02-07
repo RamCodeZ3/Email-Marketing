@@ -1,5 +1,5 @@
-from services.setting.supabase_client import supabase
-from model.schemas import UserModel
+from config.supabase_client import supabase
+from models.user_model import UserModel
 
 
 async def get_all_users():

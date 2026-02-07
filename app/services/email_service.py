@@ -1,5 +1,5 @@
-from services.setting.supabase_client import supabase
-from model.schemas import EmailModel
+from config.supabase_client import supabase
+from models.email_model import EmailModel
 from datetime import date
 
 
