@@ -34,11 +34,12 @@ El sistema es capaz de **programar envíos**, **generar automáticamente el cuer
 ```
 📦 email-marketing-api
 ┃
-┣ 📂 src
-┃ ┣ 📂 model        # Modelos de datos
+┣ 📂 app
+┃ ┣ 📂 models       # Modelos de datos
 ┃ ┣ 📂 routes       # Endpoints de la API
 ┃ ┣ 📂 services     # Lógica de negocio
 ┃ ┣ 📂 utils        # Utilidades (scheduler, helpers, etc.)
+┃ ┣ 📂 config       # configuracion y conexion al supabase
 ┃ ┣ 📜 main.py      # Archivo principal
 ┃
 ┣ 📜 .env           # Variables de entorno
